@@ -33,6 +33,8 @@ public class carPos : MonoBehaviour
 
     float sendTimer = 0.0f;
 
+    float forceTop = 0.0f;
+
     [System.Serializable]
     public class CarData
     {
@@ -88,6 +90,8 @@ public class carPos : MonoBehaviour
         };
 
         ws3.Connect();
+
+        forceTop = Time.fixedTime;
     }
 
     // Update is called once per frame
@@ -114,7 +118,7 @@ public class carPos : MonoBehaviour
         }
 
         //マッチングエラーが起きたら強制終了
-        if(Time.fixedTime > 10f){
+        if(Time.fixedTime - forceTop > 10f){
             if(countTimeStart == 0.0f){
                 SceneManager.LoadScene("TitleScene");
             }
