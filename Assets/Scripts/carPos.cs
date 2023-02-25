@@ -145,6 +145,7 @@ public class carPos : MonoBehaviour
                 if(enemy.isClear != ""){
                     ws3.Close();
                     SceneManager.LoadScene("LoseScene");
+                    return;//一応後ろが実行されない様に
                 }
             }
 
