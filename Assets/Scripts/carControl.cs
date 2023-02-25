@@ -209,21 +209,17 @@ public class carControl : MonoBehaviour
             if(name == "Blue Super Car 01"){
                 if(matchingManager.playerUUID != matchingManager.roomUUID){
                     carPos.SendWin(matchingManager.playerUUID);
-                    closeCarControlWS();
+                    ws4.Close();
                     SceneManager.LoadScene("WinScene");
                 }
             }
             else if(name == "Red Super Car 01"){
                 if(matchingManager.playerUUID == matchingManager.roomUUID){
                     carPos.SendWin(matchingManager.playerUUID);
-                    closeCarControlWS();
+                    ws4.Close();
                     SceneManager.LoadScene("WinScene");
                 }
             }
         }
-    }
-
-    public static void closeCarControlWS(){
-        carControl.ws4.Close();
     }
 }
