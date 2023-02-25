@@ -29,7 +29,7 @@ public class matchingManager : MonoBehaviour
     {
         playerUUID = Guid.NewGuid().ToString();
 
-        ws2 = new WebSocket("ws://localhost:8000/matching/matching");
+        ws2 = new WebSocket("ws://" + sceneManager.ORIGIN + "/matching/matching");
 
         ws2.OnMessage += (sender, e) =>
         {

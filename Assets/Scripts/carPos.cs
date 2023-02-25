@@ -52,7 +52,7 @@ public class carPos : MonoBehaviour
     
     void Start()
     {
-        ws3 = new WebSocket("ws://localhost:8000/play/" + matchingManager.roomUUID);
+        ws3 = new WebSocket("ws://" + sceneManager.ORIGIN + "/play/" + matchingManager.roomUUID);
 
         //敵の車はどれかを確定
         if(matchingManager.roomUUID != matchingManager.playerUUID){

@@ -31,6 +31,7 @@ public class carControl : MonoBehaviour
     public Transform wheelFRTrans;
     public Transform wheelBLTrans;
     public Transform wheelBRTrans;
+    
     float steering = 0.0f;
     float motor = 0.0f;
 
@@ -59,6 +60,9 @@ public class carControl : MonoBehaviour
 
     bool brakeTrue = false;
     bool accelTrue = false;
+
+    GameObject brakeLightR;
+    GameObject brakeLightL;
  
     void Start()
     {
@@ -67,7 +71,7 @@ public class carControl : MonoBehaviour
                 isiPhone = true;
                 handle = new iPhoneHandle();
 
-                ws4 = new WebSocket("ws://localhost:8000/control/" + generateUuid.iPhoneUUID);
+                ws4 = new WebSocket("ws://" + sceneManager.ORIGIN + "/control/" + generateUuid.iPhoneUUID);
 
                 ws4.OnMessage += (sender, e) =>
                 {
@@ -77,6 +81,9 @@ public class carControl : MonoBehaviour
 
                 ws4.Connect();
             }
+
+            brakeLightR = GameObject.Find("RBrakeLight");
+            brakeLightL = GameObject.Find("LBrakeLight");
         }
     }
  
@@ -179,11 +186,15 @@ public class carControl : MonoBehaviour
                         axleInfo.rightWheel.motorTorque = motor;
                     }
                     if(brake){
+                        brakeLightR.GetComponent<Light>().intensity = 0.5f;
+                        brakeLightL.GetComponent<Light>().intensity = 0.5f;
                         axleInfo.leftWheel.brakeTorque = maxBrakeTorque;
                         axleInfo.rightWheel.brakeTorque = maxBrakeTorque;
                     }
                     else
                     {
+                        brakeLightR.GetComponent<Light>().intensity = 0.0f;
+                        brakeLightL.GetComponent<Light>().intensity = 0.0f;
                         axleInfo.leftWheel.brakeTorque = 0;
                         axleInfo.rightWheel.brakeTorque = 0;
                     }

@@ -25,7 +25,7 @@ public class generateUuid : MonoBehaviour
         iPhoneUUID = Guid.NewGuid().ToString().Substring(0, 5);
         showUUID.text = iPhoneUUID;
 
-        ws = new WebSocket("ws://localhost:8000/control/" + iPhoneUUID);
+        ws = new WebSocket("ws://" + sceneManager.ORIGIN + "/control/" + iPhoneUUID);
 
         ws.OnMessage += (sender, e) =>
         {
