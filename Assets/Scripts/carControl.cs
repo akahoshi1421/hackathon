@@ -81,9 +81,10 @@ public class carControl : MonoBehaviour
 
                 ws4.Connect();
             }
-
-            brakeLightR = GameObject.Find("RBrakeLight");
-            brakeLightL = GameObject.Find("LBrakeLight");
+            
+            GameObject myCar = GameObject.Find(name).gameObject;
+            brakeLightR = myCar.transform.Find("RBrakeLight").gameObject;
+            brakeLightL = myCar.transform.Find("LBrakeLight").gameObject;
         }
     }
  
