@@ -35,7 +35,7 @@ public class carControl : MonoBehaviour
     float steering = 0.0f;
     float motor = 0.0f;
 
-    private WebSocket ws4;
+    static WebSocket ws4;
 
     bool carMove = false;
 
@@ -208,20 +208,22 @@ public class carControl : MonoBehaviour
         if(other.gameObject.name == "Goal"){
             if(name == "Blue Super Car 01"){
                 if(matchingManager.playerUUID != matchingManager.roomUUID){
+                    carPos.SendWin(matchingManager.playerUUID);
+                    closeCarControlWS();
                     SceneManager.LoadScene("WinScene");
-                }
-                else{
-                    SceneManager.LoadScene("LoseScene");
                 }
             }
             else if(name == "Red Super Car 01"){
                 if(matchingManager.playerUUID == matchingManager.roomUUID){
+                    carPos.SendWin(matchingManager.playerUUID);
+                    closeCarControlWS();
                     SceneManager.LoadScene("WinScene");
-                }
-                else{
-                    SceneManager.LoadScene("LoseScene");
                 }
             }
         }
+    }
+
+    public static void closeCarControlWS(){
+        ws4.Close();
     }
 }

@@ -11,7 +11,7 @@ public class carPos : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    private WebSocket ws3;
+    static WebSocket ws3;
     public Text CountDownText;
     public Text forceText;
 
@@ -141,6 +141,12 @@ public class carPos : MonoBehaviour
 
                 //車体回転位置
                 enemyObject.transform.rotation = Quaternion.Euler(enemy.rotx, enemy.roty, enemy.rotz);
+
+                if(enemy.isClear != ""){
+                    ws3.Close();
+                    carControl.closeCarControlWS();
+                    SceneManager.LoadScene("LoseScene");
+                }
             }
 
 
@@ -173,5 +179,13 @@ public class carPos : MonoBehaviour
         }
 
         
+    }
+
+    public static void SendWin(string uuid){
+        CarData winCarData = new CarData();
+        winCarData.isClear = uuid;
+
+        ws3.Send(JsonUtility.ToJson(winCarData));
+        ws3.Close();
     }
 }
