@@ -224,6 +224,6 @@ public class carControl : MonoBehaviour
     }
 
     public static void closeCarControlWS(){
-        ws4.Close();
+        carControl.ws4.Close();
     }
 }

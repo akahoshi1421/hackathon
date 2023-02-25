@@ -185,7 +185,7 @@ public class carPos : MonoBehaviour
         CarData winCarData = new CarData();
         winCarData.isClear = uuid;
 
-        ws3.Send(JsonUtility.ToJson(winCarData));
-        ws3.Close();
+        carPos.ws3.Send(JsonUtility.ToJson(winCarData));
+        carPos.ws3.Close();
     }
 }
