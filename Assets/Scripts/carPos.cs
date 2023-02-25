@@ -55,6 +55,8 @@ public class carPos : MonoBehaviour
     
     void Start()
     {
+        startOK = false;
+        countDownEnd = false;
         ws3 = new WebSocket("ws://" + sceneManager.ORIGIN + "/play/" + matchingManager.roomUUID);
 
         //敵の車はどれかを確定
