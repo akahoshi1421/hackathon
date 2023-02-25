@@ -24,4 +24,8 @@ public class sceneManager : MonoBehaviour
     public void goMatching(){
         SceneManager.LoadScene("MatchingScene");
     }
+
+    public void goTop(){
+        SceneManager.LoadScene("titleScene");
+    }
 }

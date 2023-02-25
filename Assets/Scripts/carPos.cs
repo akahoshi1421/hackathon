@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 using WebSocketSharp;
 using WebSocketSharp.Net;
@@ -12,6 +13,7 @@ public class carPos : MonoBehaviour
 
     private WebSocket ws3;
     public Text CountDownText;
+    public Text forceText;
 
     //相手の位置
     GameObject enemyObject;
@@ -62,6 +64,19 @@ public class carPos : MonoBehaviour
             myObject = GameObject.Find("Red Super Car 01");
         }
 
+        //車が荒ぶらない様に敵の車のwheelcolliderを削除
+        GameObject wheels = enemyObject.transform.Find("Wheels").gameObject;
+
+        GameObject fr = wheels.transform.Find("FR").gameObject;
+        GameObject fl = wheels.transform.Find("FL").gameObject;
+        GameObject br = wheels.transform.Find("BR").gameObject;
+        GameObject bl = wheels.transform.Find("BL").gameObject;
+
+        Destroy(fr.GetComponent<WheelCollider>());
+        Destroy(fl.GetComponent<WheelCollider>());
+        Destroy(br.GetComponent<WheelCollider>());
+        Destroy(bl.GetComponent<WheelCollider>());
+
         ws3.OnMessage += (sender, e) =>
         {
             enemy = JsonUtility.FromJson<CarData>(e.Data);
@@ -87,6 +102,7 @@ public class carPos : MonoBehaviour
         if(countTimeStart != 0.0f){
             if(Time.fixedTime - countTimeStart > 5f){
                 CountDownText.text = "";
+                forceText.text = "";
                 countDownEnd = true;
             }
 
@@ -94,6 +110,13 @@ public class carPos : MonoBehaviour
                 count = Time.fixedTime;
                 CountDownText.text = countDown.ToString();
                 countDown--;
+            }
+        }
+
+        //マッチングエラーが起きたら強制終了
+        if(Time.fixedTime > 10f){
+            if(countTimeStart == 0.0f){
+                SceneManager.LoadScene("TitleScene");
             }
         }
 
@@ -137,6 +160,12 @@ public class carPos : MonoBehaviour
 
                 ws3.Send(JsonUtility.ToJson(sendMyCar));
             }
+            
+            if(Input.GetKeyDown(KeyCode.R)){
+                myObject.transform.position = new Vector3(myObject.transform.position.x, myObject.transform.position.y + 3f, myObject.transform.position.z);
+                myObject.transform.rotation = Quaternion.Euler(0f, myObject.transform.eulerAngles.y, 0f);
+            }
+            
         }
 
         

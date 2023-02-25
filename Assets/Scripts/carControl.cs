@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 using WebSocketSharp;
 using WebSocketSharp.Net;
@@ -82,17 +83,17 @@ public class carControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //wheelcolliderの回転速度に合わせてタイヤモデルを回転させる
-        wheelFLTrans.Rotate( wheelFL.rpm / 60 * 360 * Time.deltaTime, 0, 0);
-        wheelFRTrans.Rotate( wheelFR.rpm / 60 * 360 * Time.deltaTime, 0, 0);
-        wheelBLTrans.Rotate( wheelBL.rpm / 60 * 360 * Time.deltaTime, 0, 0);
-        wheelBRTrans.Rotate( wheelBR.rpm / 60 * 360 * Time.deltaTime, 0, 0);
-        
-        //wheelcolliderの角度に合わせてタイヤモデルを回転する（フロントのみ）
-        wheelFLTrans.localEulerAngles = new Vector3(wheelFLTrans.localEulerAngles.x, wheelFL.steerAngle - wheelFLTrans.localEulerAngles.z, wheelFLTrans.localEulerAngles.z);
-        wheelFRTrans.localEulerAngles = new Vector3(wheelFRTrans.localEulerAngles.x, wheelFR.steerAngle - wheelFRTrans.localEulerAngles.z, wheelFRTrans.localEulerAngles.z);
- 
- 
+        if((matchingManager.playerUUID != matchingManager.roomUUID && name == "Blue Super Car 01") || (matchingManager.playerUUID == matchingManager.roomUUID && name == "Red Super Car 01")){
+            //wheelcolliderの回転速度に合わせてタイヤモデルを回転させる
+            wheelFLTrans.Rotate( wheelFL.rpm / 60 * 360 * Time.deltaTime, 0, 0);
+            wheelFRTrans.Rotate( wheelFR.rpm / 60 * 360 * Time.deltaTime, 0, 0);
+            wheelBLTrans.Rotate( wheelBL.rpm / 60 * 360 * Time.deltaTime, 0, 0);
+            wheelBRTrans.Rotate( wheelBR.rpm / 60 * 360 * Time.deltaTime, 0, 0);
+            
+            //wheelcolliderの角度に合わせてタイヤモデルを回転する（フロントのみ）
+            wheelFLTrans.localEulerAngles = new Vector3(wheelFLTrans.localEulerAngles.x, wheelFL.steerAngle - wheelFLTrans.localEulerAngles.z, wheelFLTrans.localEulerAngles.z);
+            wheelFRTrans.localEulerAngles = new Vector3(wheelFRTrans.localEulerAngles.x, wheelFR.steerAngle - wheelFRTrans.localEulerAngles.z, wheelFRTrans.localEulerAngles.z);
+        }
     }
  
     public void FixedUpdate()
@@ -190,5 +191,26 @@ public class carControl : MonoBehaviour
             }
         }
         
+    }
+
+    private void OnCollisionEnter(Collision other) {
+        if(other.gameObject.name == "Goal"){
+            if(name == "Blue Super Car 01"){
+                if(matchingManager.playerUUID != matchingManager.roomUUID){
+                    SceneManager.LoadScene("WinScene");
+                }
+                else{
+                    SceneManager.LoadScene("LoseScene");
+                }
+            }
+            else if(name == "Red Super Car 01"){
+                if(matchingManager.playerUUID == matchingManager.roomUUID){
+                    SceneManager.LoadScene("WinScene");
+                }
+                else{
+                    SceneManager.LoadScene("LoseScene");
+                }
+            }
+        }
     }
 }
