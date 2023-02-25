@@ -11,7 +11,7 @@ public class carPos : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    static WebSocket ws3;
+    public static WebSocket ws3;
     public Text CountDownText;
     public Text forceText;
 

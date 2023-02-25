@@ -35,7 +35,7 @@ public class carControl : MonoBehaviour
     float steering = 0.0f;
     float motor = 0.0f;
 
-    static WebSocket ws4;
+    public static WebSocket ws4;
 
     bool carMove = false;
 
