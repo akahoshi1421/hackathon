@@ -45,6 +45,7 @@ public class carPos : MonoBehaviour
         public float rotx = 0.0f;
         public float roty = 0.0f;
         public float rotz = 0.0f;
+        public int isBrake = 0;
         public int isConnect = 0;
         public string isClear = "";
         public string senderUUID = "";
@@ -142,6 +143,19 @@ public class carPos : MonoBehaviour
                 //車体回転位置
                 enemyObject.transform.rotation = Quaternion.Euler(enemy.rotx, enemy.roty, enemy.rotz);
 
+                //ブレーキランプを点灯させるか
+                GameObject brakeLightR = enemyObject.transform.Find("RBrakeLight").gameObject;
+                GameObject brakeLightL = enemyObject.transform.Find("LBrakeLight").gameObject;
+                if(enemy.isBrake == 1){
+                    brakeLightR.GetComponent<Light>().range = 0.5f;
+                    brakeLightL.GetComponent<Light>().range = 0.5f;
+                }
+                else{
+                    brakeLightR.GetComponent<Light>().range = 0.0f;
+                    brakeLightL.GetComponent<Light>().range = 0.0f;
+                }
+
+
                 if(enemy.isClear != ""){
                     ws3.Close();
                     SceneManager.LoadScene("LoseScene");
@@ -167,6 +181,7 @@ public class carPos : MonoBehaviour
                 sendMyCar.rotx = myObject.transform.eulerAngles.x;
                 sendMyCar.roty = myObject.transform.eulerAngles.y;
                 sendMyCar.rotz = myObject.transform.eulerAngles.z;
+                sendMyCar.isBrake = Input.GetKey(KeyCode.Space) ? 1 : 0;
 
                 ws3.Send(JsonUtility.ToJson(sendMyCar));
             }

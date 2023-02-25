@@ -187,15 +187,15 @@ public class carControl : MonoBehaviour
                         axleInfo.rightWheel.motorTorque = motor;
                     }
                     if(brake){
-                        brakeLightR.GetComponent<Light>().intensity = 0.5f;
-                        brakeLightL.GetComponent<Light>().intensity = 0.5f;
+                        brakeLightR.GetComponent<Light>().range = 0.5f;
+                        brakeLightL.GetComponent<Light>().range = 0.5f;
                         axleInfo.leftWheel.brakeTorque = maxBrakeTorque;
                         axleInfo.rightWheel.brakeTorque = maxBrakeTorque;
                     }
                     else
                     {
-                        brakeLightR.GetComponent<Light>().intensity = 0.0f;
-                        brakeLightL.GetComponent<Light>().intensity = 0.0f;
+                        brakeLightR.GetComponent<Light>().range = 0.0f;
+                        brakeLightL.GetComponent<Light>().range = 0.0f;
                         axleInfo.leftWheel.brakeTorque = 0;
                         axleInfo.rightWheel.brakeTorque = 0;
                     }
