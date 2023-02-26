@@ -16,12 +16,14 @@ public class generateUuid : MonoBehaviour
     public static string iPhoneUUID = "";
     public Text showUUID;
     public Text connectOK;
+    public GameObject goMatchingBtn;
     private WebSocket ws;
 
     bool iPhoneOKFlag = false;
 
     void Start()
     {
+        goMatchingBtn.SetActive(false);
         iPhoneUUID = Guid.NewGuid().ToString().Substring(0, 5);
         showUUID.text = iPhoneUUID;
 
@@ -44,6 +46,7 @@ public class generateUuid : MonoBehaviour
             iPhoneOKFlag = false;
             ws.Send("UnityOK");//3ウェイハンドシェイク用
             connectOK.text = "接続を確認しました。";
+            goMatchingBtn.SetActive(true);
         }
     }
 
