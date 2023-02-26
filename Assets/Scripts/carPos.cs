@@ -183,7 +183,10 @@ public class carPos : MonoBehaviour
                 sendMyCar.rotx = myObject.transform.eulerAngles.x;
                 sendMyCar.roty = myObject.transform.eulerAngles.y;
                 sendMyCar.rotz = myObject.transform.eulerAngles.z;
-                sendMyCar.isBrake = Input.GetKey(KeyCode.Space) ? 1 : 0;
+
+                GameObject brakeLightRObject = enemyObject.transform.Find("RBrakeLight").gameObject;
+            
+                sendMyCar.isBrake = brakeLightRObject.GetComponent<Light>().range != 0.0f ? 1 : 0;
 
                 ws3.Send(JsonUtility.ToJson(sendMyCar));
             }
