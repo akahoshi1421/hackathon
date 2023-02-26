@@ -184,7 +184,7 @@ public class carPos : MonoBehaviour
                 sendMyCar.roty = myObject.transform.eulerAngles.y;
                 sendMyCar.rotz = myObject.transform.eulerAngles.z;
 
-                GameObject brakeLightRObject = enemyObject.transform.Find("RBrakeLight").gameObject;
+                GameObject brakeLightRObject = myObject.transform.Find("RBrakeLight").gameObject;
             
                 sendMyCar.isBrake = brakeLightRObject.GetComponent<Light>().range != 0.0f ? 1 : 0;
 
