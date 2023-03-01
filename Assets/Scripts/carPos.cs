@@ -25,6 +25,10 @@ public class carPos : MonoBehaviour
 
     public static bool countDownEnd = false;
 
+    public AudioSource audio;
+    public AudioClip countDownSE;
+    public AudioClip countDownEndSE;
+
     float countTimeStart = 0.0f;
 
     float count = 0.0f;
@@ -34,6 +38,17 @@ public class carPos : MonoBehaviour
     float sendTimer = 0.0f;
 
     float forceTop = 0.0f;
+
+    bool enemybrakeFrontFrame = false;
+
+    bool isaccelFrontFrame = false;
+
+    public AudioSource redCar;
+    public AudioSource redCarAccel;
+    public AudioSource blueCar;
+    public AudioSource blueCarAccel;
+    public AudioClip brakeEnemySE;
+    public AudioClip accelEnemySE;
 
     [System.Serializable]
     public class CarData
@@ -46,6 +61,7 @@ public class carPos : MonoBehaviour
         public float roty = 0.0f;
         public float rotz = 0.0f;
         public int isBrake = 0;
+        public int isAccel = 0;
         public int isConnect = 0;
         public string isClear = "";
         public string senderUUID = "";
@@ -110,12 +126,14 @@ public class carPos : MonoBehaviour
             if(Time.fixedTime - countTimeStart > 5f){
                 CountDownText.text = "";
                 forceText.text = "";
+                if(!countDownEnd) audio.PlayOneShot(countDownEndSE);
                 countDownEnd = true;
             }
 
             if(!countDownEnd && Time.fixedTime - count > 1.0f){
                 count = Time.fixedTime;
                 CountDownText.text = countDown.ToString();
+                audio.PlayOneShot(countDownSE);
                 countDown--;
             }
         }
@@ -149,12 +167,46 @@ public class carPos : MonoBehaviour
                 GameObject brakeLightR = enemyObject.transform.Find("RBrakeLight").gameObject;
                 GameObject brakeLightL = enemyObject.transform.Find("LBrakeLight").gameObject;
                 if(enemy.isBrake == 1){
+                    //相手のブレーキ音
+                    if(!enemybrakeFrontFrame){
+                        enemybrakeFrontFrame = true;
+                        if(matchingManager.roomUUID != matchingManager.playerUUID){
+                            if(redCarAccel.isPlaying) redCarAccel.Stop();
+                            redCar.PlayOneShot(brakeEnemySE);
+                        }
+                        else{
+                            if(blueCarAccel.isPlaying) blueCarAccel.Stop();
+                            blueCar.PlayOneShot(brakeEnemySE);
+                        }
+                    }
                     brakeLightR.GetComponent<Light>().range = 0.5f;
                     brakeLightL.GetComponent<Light>().range = 0.5f;
                 }
                 else{
+                    enemybrakeFrontFrame = false;
                     brakeLightR.GetComponent<Light>().range = 0.0f;
                     brakeLightL.GetComponent<Light>().range = 0.0f;
+                }
+
+                if(enemy.isAccel == 1){
+                    if(!isaccelFrontFrame){
+                        isaccelFrontFrame = true;
+                        if(matchingManager.roomUUID != matchingManager.playerUUID){
+                            redCarAccel.PlayOneShot(accelEnemySE);
+                        }
+                        else{
+                            blueCarAccel.PlayOneShot(accelEnemySE);
+                        }
+                    }
+                }
+                else{
+                    isaccelFrontFrame = false;
+                    if(matchingManager.roomUUID != matchingManager.playerUUID){
+                        redCarAccel.Stop();
+                    }
+                    else{
+                        blueCarAccel.Stop();
+                    }
                 }
 
 
@@ -187,6 +239,8 @@ public class carPos : MonoBehaviour
                 GameObject brakeLightRObject = myObject.transform.Find("RBrakeLight").gameObject;
             
                 sendMyCar.isBrake = brakeLightRObject.GetComponent<Light>().range != 0.0f ? 1 : 0;
+
+                sendMyCar.isAccel = carControl.isAccel ? 1 : 0;
 
                 ws3.Send(JsonUtility.ToJson(sendMyCar));
             }

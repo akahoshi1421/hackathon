@@ -37,11 +37,31 @@ public class carControl : MonoBehaviour
 
     public static WebSocket ws4;
 
+    //加速中の走行音
+    public AudioSource accelSESource;
+    public AudioClip accelSE;
+
+    //加速がトップに達した時の走行音(AudioSourceは加速中と共通化)
+    public AudioClip accelTopSE;
+
+    //ブレーキ音
+    public AudioSource brakeSESouce;
+    public AudioClip brakeSE;
+
+    //スピード取り出し用(止まってる状態でブレーキかけると音が鳴らない様に)
+    public Rigidbody speedMator;
+
+    //アクセルを踏んでるか
+    public static bool isAccel = false;
+
     bool carMove = false;
 
     bool isiPhone = false;
 
     bool brake;
+
+    bool isbrakeFrontFrame = false;
+    bool isaccelFrontFrame = false;
 
     [System.Serializable]
     public class iPhoneHandle
@@ -66,6 +86,7 @@ public class carControl : MonoBehaviour
  
     void Start()
     {
+        isAccel = false;
         if((matchingManager.playerUUID != matchingManager.roomUUID && name == "Blue Super Car 01") || (matchingManager.playerUUID == matchingManager.roomUUID && name == "Red Super Car 01")){
             if(generateUuid.iPhoneUUID != ""){
                 isiPhone = true;
@@ -92,6 +113,9 @@ public class carControl : MonoBehaviour
     void Update()
     {
         if((matchingManager.playerUUID != matchingManager.roomUUID && name == "Blue Super Car 01") || (matchingManager.playerUUID == matchingManager.roomUUID && name == "Red Super Car 01")){
+            if(isaccelFrontFrame && !accelSESource.isPlaying){
+                accelSESource.PlayOneShot(accelTopSE);
+            }
             //wheelcolliderの回転速度に合わせてタイヤモデルを回転させる
             wheelFLTrans.Rotate( wheelFL.rpm / 60 * 360 * Time.deltaTime, 0, 0);
             wheelFRTrans.Rotate( wheelFR.rpm / 60 * 360 * Time.deltaTime, 0, 0);
@@ -101,6 +125,7 @@ public class carControl : MonoBehaviour
             //wheelcolliderの角度に合わせてタイヤモデルを回転する（フロントのみ）
             wheelFLTrans.localEulerAngles = new Vector3(wheelFLTrans.localEulerAngles.x, wheelFL.steerAngle - wheelFLTrans.localEulerAngles.z, wheelFLTrans.localEulerAngles.z);
             wheelFRTrans.localEulerAngles = new Vector3(wheelFRTrans.localEulerAngles.x, wheelFR.steerAngle - wheelFRTrans.localEulerAngles.z, wheelFRTrans.localEulerAngles.z);
+            
         }
     }
  
@@ -168,9 +193,23 @@ public class carControl : MonoBehaviour
                 }
                 else{
                     //通常のキー操作
-                    motor = -maxMotorTorque * Input.GetAxis("Vertical");
+                    speedCounter = Input.GetAxis("Vertical");
+                    motor = -maxMotorTorque * speedCounter;
                     steering = maxSteeringAngle * Input.GetAxis("Horizontal");
                     brake = Input.GetKey(KeyCode.Space);
+                }
+
+                //アクセル音を鳴らす
+                if(speedCounter != 0.0f){
+                    isAccel = true;
+                    if(!isaccelFrontFrame){
+                        isaccelFrontFrame = true;
+                        accelSESource.PlayOneShot(accelTopSE);
+                    }
+                }
+                else{
+                    isAccel = false;
+                    isaccelFrontFrame = false;
                 }
 
 
@@ -187,6 +226,15 @@ public class carControl : MonoBehaviour
                         axleInfo.rightWheel.motorTorque = motor;
                     }
                     if(brake){
+                        //ブレーキ音を鳴らす
+                        if(!isbrakeFrontFrame){
+                            if(accelSESource.isPlaying) accelSESource.Stop();
+                            if(speedMator.velocity.magnitude * 3.6f > 3f){
+                                brakeSESouce.PlayOneShot(brakeSE);
+                            }
+                            
+                            isbrakeFrontFrame = true;
+                        } 
                         brakeLightR.GetComponent<Light>().range = 0.5f;
                         brakeLightL.GetComponent<Light>().range = 0.5f;
                         axleInfo.leftWheel.brakeTorque = maxBrakeTorque;
@@ -194,6 +242,7 @@ public class carControl : MonoBehaviour
                     }
                     else
                     {
+                        isbrakeFrontFrame = false;
                         brakeLightR.GetComponent<Light>().range = 0.0f;
                         brakeLightL.GetComponent<Light>().range = 0.0f;
                         axleInfo.leftWheel.brakeTorque = 0;
