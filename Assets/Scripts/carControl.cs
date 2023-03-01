@@ -188,7 +188,7 @@ public class carControl : MonoBehaviour
                         gyro = handle.gyro <= -60 ? -60 : gyro;
                         float steer = float.Parse(((-1 * gyro / 30) / 4).ToString("f1"));
 
-                        steering = maxSteeringAngle * steer;
+                        steering = 30 * steer;
                     
                 }
                 else{

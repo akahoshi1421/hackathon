@@ -254,7 +254,14 @@ public class carPos : MonoBehaviour
 
                 sendMyCar.isAccel = carControl.isAccel ? 1 : 0;
 
-                ws3.Send(JsonUtility.ToJson(sendMyCar));
+                //タイミングが悪いと送信できないことがあるため
+                try{
+                    ws3.Send(JsonUtility.ToJson(sendMyCar));
+                }
+                catch{
+                    ;
+                }
+                
             }
             
             if(Input.GetKeyDown(KeyCode.R)){

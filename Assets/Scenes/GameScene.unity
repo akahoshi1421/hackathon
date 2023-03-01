@@ -2984,7 +2984,7 @@ MonoBehaviour:
     motor: 1
     steering: 0
   maxMotorTorque: -500
-  maxSteeringAngle: 30
+  maxSteeringAngle: 60
   maxBrakeTorque: 6000
   wheelFL: {fileID: 2028409204}
   wheelFR: {fileID: 587252517}
@@ -22730,7 +22730,7 @@ MonoBehaviour:
     motor: 1
     steering: 0
   maxMotorTorque: -500
-  maxSteeringAngle: 30
+  maxSteeringAngle: 60
   maxBrakeTorque: 6000
   wheelFL: {fileID: 924124724}
   wheelFR: {fileID: 906408618}

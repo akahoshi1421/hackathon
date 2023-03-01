@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class sceneManager : MonoBehaviour
 {
     // Start is called before the first frame update
-    public static string ORIGIN = "192.168.1.54:8000";
+    public static string ORIGIN = "jissyu3.net";
     void Start()
     {
         
