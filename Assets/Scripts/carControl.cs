@@ -208,6 +208,7 @@ public class carControl : MonoBehaviour
                     }
                 }
                 else{
+                    accelSESource.Stop();
                     isAccel = false;
                     isaccelFrontFrame = false;
                 }

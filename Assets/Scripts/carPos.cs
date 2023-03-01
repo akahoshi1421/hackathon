@@ -50,6 +50,8 @@ public class carPos : MonoBehaviour
     public AudioClip brakeEnemySE;
     public AudioClip accelEnemySE;
 
+    Vector3 enemyPosFrontFrame;
+
     [System.Serializable]
     public class CarData
     {
@@ -79,6 +81,8 @@ public class carPos : MonoBehaviour
         if(matchingManager.roomUUID != matchingManager.playerUUID){
             enemyObject = GameObject.Find("Red Super Car 01");
             myObject = GameObject.Find("Blue Super Car 01");
+
+            enemyPosFrontFrame = enemyObject.transform.position;
         }
         else{
             enemyObject = GameObject.Find("Blue Super Car 01");
@@ -172,11 +176,17 @@ public class carPos : MonoBehaviour
                         enemybrakeFrontFrame = true;
                         if(matchingManager.roomUUID != matchingManager.playerUUID){
                             if(redCarAccel.isPlaying) redCarAccel.Stop();
-                            redCar.PlayOneShot(brakeEnemySE);
+                            float dis = Vector3.Distance(enemyPosFrontFrame, enemyObject.transform.position);
+                            if(dis > 0.3f){
+                                redCar.PlayOneShot(brakeEnemySE);
+                            }
                         }
                         else{
                             if(blueCarAccel.isPlaying) blueCarAccel.Stop();
-                            blueCar.PlayOneShot(brakeEnemySE);
+                            float dis = Vector3.Distance(enemyPosFrontFrame, enemyObject.transform.position);
+                            if(dis > 0.3f){
+                                blueCar.PlayOneShot(brakeEnemySE);
+                            }
                         }
                     }
                     brakeLightR.GetComponent<Light>().range = 0.5f;
@@ -215,6 +225,8 @@ public class carPos : MonoBehaviour
                     SceneManager.LoadScene("LoseScene");
                     return;//一応後ろが実行されない様に
                 }
+
+                enemyPosFrontFrame = enemyObject.transform.position;
             }
 
 
